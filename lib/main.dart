@@ -34,6 +34,7 @@ class _RecordingScreenState extends State<RecordingScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Microphone Flutter Web',
       home: Scaffold(
         backgroundColor: veryDarkBlue,
         body: Center(
