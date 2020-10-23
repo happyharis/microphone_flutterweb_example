@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum AudioState { recording, stop, play, init }
+enum AudioState { recording, stop, play }
 
 const veryDarkBlue = Color(0xff172133);
 const kindaDarkBlue = Color(0xff202641);
