@@ -20,11 +20,15 @@ class _RecordingScreenState extends State<RecordingScreen> {
   void handleAudioState(AudioState state) {
     setState(() {
       if (audioState == null) {
+        // Starts recording
         audioState = AudioState.recording;
+        // Finished recording
       } else if (audioState == AudioState.recording) {
         audioState = AudioState.play;
+        // Play recorded audio
       } else if (audioState == AudioState.play) {
         audioState = AudioState.stop;
+        // Stop recorded audio
       } else if (audioState == AudioState.stop) {
         audioState = AudioState.play;
       }
