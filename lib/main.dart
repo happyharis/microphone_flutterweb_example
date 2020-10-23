@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:microphone/microphone.dart';
 
 enum AudioState { recording, stop, play, init }
 
@@ -16,17 +18,39 @@ class RecordingScreen extends StatefulWidget {
 
 class _RecordingScreenState extends State<RecordingScreen> {
   AudioState audioState;
+  MicrophoneRecorder _recorder;
+  AudioPlayer _audioPlayer;
+
+  @override
+  void initState() {
+    super.initState();
+    _recorder = MicrophoneRecorder()..init();
+  }
 
   void handleAudioState(AudioState state) {
     setState(() {
       if (audioState == null) {
+        // Starts recording
         audioState = AudioState.recording;
+        _recorder.start();
+        // Finished recording
       } else if (audioState == AudioState.recording) {
         audioState = AudioState.play;
+        _recorder.stop();
+        // Play recorded audio
       } else if (audioState == AudioState.play) {
         audioState = AudioState.stop;
+        _audioPlayer = AudioPlayer();
+        _audioPlayer.setUrl(_recorder.value.recording.url).then((_) {
+          _audioPlayer.play().then((_) {
+            setState(() => audioState = AudioState.play);
+          });
+        });
+
+        // Stop recorded audio
       } else if (audioState == AudioState.stop) {
         audioState = AudioState.play;
+        _audioPlayer.stop();
       }
     });
   }
@@ -71,6 +95,8 @@ class _RecordingScreenState extends State<RecordingScreen> {
                     padding: EdgeInsets.all(30),
                     onPressed: () => setState(() {
                       audioState = null;
+                      _recorder.dispose();
+                      _recorder = MicrophoneRecorder()..init();
                     }),
                     child: Icon(Icons.replay, size: 50),
                   ),
